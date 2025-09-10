@@ -1,3 +1,4 @@
+# .github/workflows/pio.yml
 name: PlatformIO CI
 
 on:
@@ -9,8 +10,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # Run all "run:" commands from the PIO project folder
+    defaults:
+      run:
+        working-directory: esp32_touch_mqtt
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -23,13 +29,18 @@ jobs:
         with:
           path: |
             ~/.platformio
-            .pio
-          key: pio-${{ runner.os }}-${{ hashFiles('**/platformio.ini') }}
+            esp32_touch_mqtt/.pio
+          key: pio-${{ runner.os }}-${{ hashFiles('esp32_touch_mqtt/platformio.ini') }}
 
       - name: Install PlatformIO Core
         run: pip install -U platformio
 
-      - name: Build (all envs in platformio.ini)
+      - name: Show PlatformIO version & project config
+        run: |
+          pio --version
+          pio project config
+
+      - name: Build (all envs from platformio.ini)
         run: pio run
 
       - name: Collect firmware artifacts
@@ -42,5 +53,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pio-build-${{ github.sha }}
-          path: artifacts
+          # upload from the subfolder we were working in
+          path: esp32_touch_mqtt/artifacts
+          if-no-files-found: warn
           retention-days: 7
