@@ -1,0 +1,7 @@
+entry T 0 
+ulp_high_thr B 84 
+ulp_last_result B 8c 
+ulp_low_thr B 80 
+ulp_sample_counter B 88 
+ulp_touch_counter B 90 
+wake_up_and_count T 58 

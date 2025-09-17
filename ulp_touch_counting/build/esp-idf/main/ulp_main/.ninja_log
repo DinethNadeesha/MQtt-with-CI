@@ -1,0 +1,15 @@
+# ninja log v5
+6	273	7760366373893384	ulp_fsm.ld	3f0929ac814a9f16
+6	273	7760366373893384	C:/Users/dineth/workspace/ulp_touch_counting/build/esp-idf/main/ulp_main/ulp_fsm.ld	3f0929ac814a9f16
+273	523	7760366376424075	adc.ulp.S	cf32a708a41f1bc4
+273	523	7760366376424075	C:/Users/dineth/workspace/ulp_touch_counting/build/esp-idf/main/ulp_main/adc.ulp.S	cf32a708a41f1bc4
+523	555	7760366377549616	CMakeFiles/ulp_main.dir/adc.ulp.S.obj	424b19dcbe8bf1d3
+556	817	7760366379475884	ulp_main.elf	f11dfb8cb494ff53
+826	1102	7760366382025898	ulp_main.sym	6023e2e3d9c79fa9
+826	1102	7760366382025898	C:/Users/dineth/workspace/ulp_touch_counting/build/esp-idf/main/ulp_main/ulp_main.sym	6023e2e3d9c79fa9
+817	1135	7760366382909370	ulp_main.bin	a119a93f6fc5968c
+817	1135	7760366382909370	C:/Users/dineth/workspace/ulp_touch_counting/build/esp-idf/main/ulp_main/ulp_main.bin	a119a93f6fc5968c
+1103	1441	7760366385867018	ulp_main.ld	e4e5a232736465b5
+1103	1441	7760366385867018	ulp_main.h	e4e5a232736465b5
+1103	1441	7760366385867018	C:/Users/dineth/workspace/ulp_touch_counting/build/esp-idf/main/ulp_main/ulp_main.ld	e4e5a232736465b5
+1103	1441	7760366385867018	C:/Users/dineth/workspace/ulp_touch_counting/build/esp-idf/main/ulp_main/ulp_main.h	e4e5a232736465b5

@@ -1,0 +1,65 @@
+name: ESP-IDF CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'ulp_touch_counting/**'
+      - '.github/workflows/idf.yml'
+  pull_request:
+    paths:
+      - 'idf_touch/**'
+      - '.github/workflows/idf.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      IDF_PATH: ${{ github.workspace }}/esp-idf
+      IDF_TARGET: esp32          # change to esp32s3 / esp32c3 if needed
+      PROJECT_DIR: ulp_touch_counting     # <-- your ESP-IDF project folder name
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive   # if your project uses IDF submodules
+
+      - name: Set up ESP-IDF (latest stable)
+        uses: espressif/setup-idf@v1
+        with:
+          version: v5.2           # or v5.1, v5.0, etc.
+
+      # Optional: CCache to speed up rebuilds
+      - name: Enable compiler cache
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ccache
+          echo "export PATH=/usr/lib/ccache:$PATH" >> $GITHUB_ENV
+
+      - name: Configure (idf.py reconfigure)
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: idf.py reconfigure
+
+      - name: Build (idf.py build)
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: idf.py build
+
+      - name: Collect firmware artifacts
+        if: always()
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: |
+          mkdir -p ../artifacts_idf
+          cp -v build/*.bin ../artifacts_idf/ || true
+          cp -v build/*.elf ../artifacts_idf/ || true
+          cp -v build/*partition*.bin ../artifacts_idf/ || true
+          cp -v build/bootloader/*.bin ../artifacts_idf/ || true
+          ls -l ../artifacts_idf || true
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: idf-build-${{ github.sha }}
+          path: artifacts_idf
+          retention-days: 7

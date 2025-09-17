@@ -1,22 +1,21 @@
-# .github/workflows/pio.yml
 name: PlatformIO CI
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'esp32_touch_mqtt/**'
+      - '.github/workflows/pio.yml'
   pull_request:
+    paths:
+      - 'esp32_touch_mqtt/**'
+      - '.github/workflows/pio.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    # Run all "run:" commands from the PIO project folder
-    defaults:
-      run:
-        working-directory: esp32_touch_mqtt
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -35,25 +34,20 @@ jobs:
       - name: Install PlatformIO Core
         run: pip install -U platformio
 
-      - name: Show PlatformIO version & project config
-        run: |
-          pio --version
-          pio project config
-
-      - name: Build (all envs from platformio.ini)
+      - name: Build
+        working-directory: esp32_touch_mqtt
         run: pio run
 
       - name: Collect firmware artifacts
         shell: bash
+        working-directory: esp32_touch_mqtt
         run: |
-          mkdir -p artifacts
-          find .pio -type f \( -name "*.bin" -o -name "*.elf" -o -name "*.map" \) -exec cp {} artifacts/ \;
+          mkdir -p ../artifacts_pio
+          find .pio -type f \( -name "*.bin" -o -name "*.elf" -o -name "*.map" \) -exec cp {} ../artifacts_pio/ \;
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: pio-build-${{ github.sha }}
-          # upload from the subfolder we were working in
-          path: esp32_touch_mqtt/artifacts
-          if-no-files-found: warn
+          path: artifacts_pio
           retention-days: 7
